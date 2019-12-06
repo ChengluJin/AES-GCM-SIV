@@ -61,6 +61,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #if !defined (ALIGN16)
 #if defined (__GNUC__)
@@ -178,8 +179,14 @@ int main(int argc, char *argv[])
 #endif
 	
 //Check SIV_GCM 2 keys	
+	
+	clock_t start_enc = clock();
 	GCM_SIV_ENC_2_Keys(CIPHERTEXT, TAG, K1, N, AAD, PLAINTEXT, aad_len, in_len);
+	clock_t end_enc = clock();
 	res = GCM_SIV_DEC_2_Keys(decrypted_CT, TAG, K1, N, AAD, CIPHERTEXT, aad_len, in_len);
+
+	double elapsed_secs = ((double)(end_enc - start_enc)) / CLOCKS_PER_SEC;
+        printf("Enc = %lf\n", elapsed_secs);
 	
 #ifdef DETAILS	
 	printf("\nAAD =                           "); print_buffer(AAD, aad_len);
